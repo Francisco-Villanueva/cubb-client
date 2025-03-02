@@ -1,8 +1,8 @@
 import { Stage, Layer, Rect, Text, Line, Circle } from "react-konva";
 import { useEffect, useState, useRef, Fragment } from "react";
-import { ICourt } from "../../models/court.model";
-import { AppointmnetServices } from "../../services/appointmnets.services";
-import { LoaderWrapper } from "../common/loader-wrapper";
+import { ICourt } from "../../../models/court.model";
+import { AppointmnetServices } from "../../../services/appointmnets.services";
+import { LoaderWrapper } from "../../../components/common/loader-wrapper";
 
 interface CourtsMapProps {
   courts: ICourt[];
