@@ -12,19 +12,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CreateCourtZodSchema, ICreateCourt } from "@/models/court.model";
-
+import { fetchCreate } from "@/store/utils/fetchCreate";
+import { message } from "antd";
 export default function CourtForm() {
   const form = useForm<ICreateCourt>({
     resolver: zodResolver(CreateCourtZodSchema),
     defaultValues: { name: "" },
   });
-
+  const { createCourt } = fetchCreate();
   const onSubmit = async (data: ICreateCourt) => {
-    console.log(data);
+    try {
+      await createCourt(data);
+      message.success("Cancha creada correctamente");
+      form.reset();
+    } catch (error) {
+      console.log("Error creating court", error);
+      if (typeof error === "string") {
+        message.error(error);
+      }
+      message.error("Error creando la cancha");
+    }
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10">
+    <Card className="  w-full">
       <CardHeader>
         <CardTitle>Crear Cancha</CardTitle>
       </CardHeader>

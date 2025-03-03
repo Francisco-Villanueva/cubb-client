@@ -88,7 +88,7 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
           height={stageSize.height}
           scaleX={scaleFactor}
           scaleY={scaleFactor}
-          className="border pl-6"
+          className=" pl-6"
         >
           <Layer>
             {mappedCourts.map((cancha) => {

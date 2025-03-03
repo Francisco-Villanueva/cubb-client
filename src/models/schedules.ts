@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const SegmentsZodSchema = z.object({
   startime: z.string().min(1),
@@ -7,9 +7,9 @@ const SegmentsZodSchema = z.object({
 });
 export type Segment = z.infer<typeof SegmentsZodSchema>;
 
-export const ScheduleZodSchema = z.object({
+export const WorkhourZodSchema = z.object({
   day: z.number().min(0).max(6),
   segments: z.array(SegmentsZodSchema),
 });
 
-export type ISchedules = z.infer<typeof ScheduleZodSchema>;
+export type IWorkhour = z.infer<typeof WorkhourZodSchema>;

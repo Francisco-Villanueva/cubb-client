@@ -10,18 +10,20 @@ function App() {
     <>
       <div className="flex flex-col h-screen ">
         <NavBar />
-        <Routes>
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <MainPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<AuthPage type="login" />} />
-          <Route path="/register" element={<AuthPage type="register" />} />
-        </Routes>
+        <div className="flex-grow h-[90vh] max-h-[90vh] overflow-auto">
+          <Routes>
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <MainPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<AuthPage type="login" />} />
+            <Route path="/register" element={<AuthPage type="register" />} />
+          </Routes>
+        </div>
       </div>
     </>
   );

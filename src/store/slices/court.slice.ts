@@ -25,10 +25,36 @@ const courtSlice = createSlice({
       state.courts.push(action.payload);
       state.inmutableCourts.push(action.payload);
     },
+    editCourt(
+      state,
+      action: PayloadAction<{ changes: Partial<ICourt>; id: string }>
+    ) {
+      const { changes, id } = action.payload;
+      const index = state.courts.findIndex((court) => court.id === id);
+
+      if (index !== -1) {
+        // Actualiza el appointment en el array principal
+        state.courts[index] = {
+          ...state.courts[index],
+          ...changes,
+        };
+
+        // Actualiza también los datos en inmutablesAppointments
+        const immutableIndex = state.inmutableCourts.findIndex(
+          (appointment) => appointment.id === id
+        );
+        if (immutableIndex !== -1) {
+          state.inmutableCourts[immutableIndex] = {
+            ...state.inmutableCourts[immutableIndex],
+            ...changes,
+          };
+        }
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addCourt, setCourts } = courtSlice.actions;
+export const { addCourt, setCourts, editCourt } = courtSlice.actions;
 
 export default courtSlice.reducer;
