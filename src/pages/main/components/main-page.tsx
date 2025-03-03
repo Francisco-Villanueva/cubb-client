@@ -1,26 +1,16 @@
-import { CourtsMap } from "./courts-map";
 import { SessionProvider } from "@/components/providers/session-provider";
-
 import { Route, Routes } from "react-router";
+import { DataProvider } from "@/components/providers/data-provider";
 import { AdminPage } from "@/pages/admin/page/admin-page";
 import { AdminRouteProtecter } from "@/components/routes/admin-route-protecter";
-import { DataProvider } from "@/components/providers/data-provider";
-import { useAppSelector } from "@/store/hooks";
+import { HomePage } from "../pages/home-page";
 
 export function MainPage() {
-  const { courts } = useAppSelector((s) => s.courts);
   return (
     <DataProvider>
       <SessionProvider>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <section className="flex-grow flex items-center justify-center bg-amber-50">
-                {courts.length ? <CourtsMap courts={courts} /> : null}
-              </section>
-            }
-          />
+          <Route path="/" element={<HomePage />} />
           <Route
             path="/admin"
             element={

@@ -1,11 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import CourtReducer from "./slices/court.slice";
 import UserReducer from "./slices/user.slice";
+import TeamReducer from "./slices/team.slice";
+
 export const makeStore = () => {
   return configureStore({
     reducer: {
       courts: CourtReducer,
       user: UserReducer,
+      team: TeamReducer,
     },
   });
 };

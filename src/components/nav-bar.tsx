@@ -9,6 +9,7 @@ import {
 import { LogOut, PanelsLeftBottom } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setUser } from "@/store/slices/user.slice";
+import { ROLES } from "@/interfaces/roles";
 
 export function NavBar() {
   const dispatch = useAppDispatch();
@@ -38,12 +39,14 @@ export function NavBar() {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>
-                <Link to={"/admin"} className="flex items-center gap-1">
-                  <PanelsLeftBottom className="size-4" />
-                  Administrar
-                </Link>
-              </DropdownMenuItem>
+              {user.role === ROLES.ADMIN && (
+                <DropdownMenuItem>
+                  <Link to={"/admin"} className="flex items-center gap-1">
+                    <PanelsLeftBottom className="size-4" />
+                    Administrar
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={handleLogOut}
                 className="flex items-center gap-1 cursor-pointer"
