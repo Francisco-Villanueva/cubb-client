@@ -5,6 +5,7 @@ export const UserZodSchema = z.object({
   lastName: z.string().min(1),
   userName: z.string().min(1),
   password: z.string().min(1),
+  TeamId: z.string().optional(),
   email: z.string().email().min(1),
   role: z.enum(ROLES_VALUES).optional(),
   phone: z.string().optional(),

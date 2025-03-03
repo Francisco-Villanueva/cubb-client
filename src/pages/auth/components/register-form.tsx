@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User2Icon, KeyIcon, Mail } from "lucide-react";
+import { User2Icon, KeyIcon, Mail, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -12,7 +12,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AuthServices } from "@/services/auth.services";
 
 import { useNavigate } from "react-router";
@@ -117,6 +123,28 @@ export function RegisterForm() {
                         />
                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                       </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={() => (
+                    <FormItem className="w-1/2">
+                      <Label htmlFor="team">Equipo</Label>
+                      <FormControl>
+                        <Select>
+                          <SelectTrigger>
+                            <Shield className="pointer-events-none  h-[18px] w-[18px]  text-gray-500 peer-focus:text-gray-900" />
+                            <SelectValue placeholder="Equipos" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
                     </FormItem>
                   )}
                 />
