@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import Courts from "./slices/court.slice";
+import CourtReducer from "./slices/court.slice";
+import UserReducer from "./slices/user.slice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      courts: Courts,
+      courts: CourtReducer,
+      user: UserReducer,
     },
   });
 };

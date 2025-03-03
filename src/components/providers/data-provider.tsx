@@ -19,6 +19,6 @@ export function DataProvider({ children }: PropsWithChildren) {
       }
     };
     fetchData();
-  }, [courtFetched]);
+  }, []);
   return <LoaderWrapper loading={loading}>{children}</LoaderWrapper>;
 }

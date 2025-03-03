@@ -9,9 +9,11 @@ import { z } from "zod";
 import { AuthServices } from "@/services/auth.services";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setAuthInterceptor } from "@/config/axios.config";
+import { useAppDispatch } from "@/store/hooks";
+import { setUser } from "@/store/slices/user.slice";
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useAppDispatch();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
@@ -23,6 +25,7 @@ export function LoginForm() {
       await setAuthInterceptor(res.backendTokens.accessToken);
       localStorage.setItem("accessToken", res.backendTokens.accessToken);
       localStorage.setItem("userLogged", JSON.stringify(res.user));
+      dispatch(setUser(res.user));
 
       location.replace("/"); // This is forcing a reload at the navigatin page!
     } catch (error) {
