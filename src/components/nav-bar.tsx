@@ -27,14 +27,22 @@ export function NavBar() {
       <Link to={"/"}>
         <img src="/logo.jpg" className="size-20 aspect-square rounded-full" />
       </Link>
+
+      {user && user.role === "ADMIN" && (
+        <section className="text-gray-50 flex items-center gap-8">
+          <Link to={"/admin/courts"}>Canchas</Link>
+          <Link to={"/admin/teams"}>Equipos</Link>
+          <Link to={"/admin/appointments"}>Turnos</Link>
+        </section>
+      )}
       <section>
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger className="rounded-full">
               <Avatar>
-                <AvatarFallback>
+                <AvatarFallback className="uppercase">
                   {user.name[0]}
-                  {user.lastName[0]}
+                  {user.name[1]}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>

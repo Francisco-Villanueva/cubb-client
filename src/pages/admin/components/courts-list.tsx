@@ -23,21 +23,29 @@ export const CourtList: React.FC = () => {
     }
   };
   return (
-    <div className="w-full flex gap-4    space-y-4 ">
-      <div className="flex  w-1/3  gap-2   flex-col justify-between h-full ">
+    <div className="w-full flex flex-col gap-4    space-y-4 ">
+      <div className="flex   gap-2   flex-col justify-between h-full ">
         {courts.map((court) => (
           <div
             key={court.id}
             className={` p-2 border border-border rounded-md  flex justify-between items-center gap-2  ${
-              selectedCourt?.id === court.id ? "bg-accent" : ""
+              selectedCourt?.id === court.id ? "bg-sky-50" : ""
             }`}
           >
             <h2>{court.name}</h2>
-            <div className="flex gap-1">
-              <Button size={"sm"} onClick={() => selectCourt(court, "detail")}>
+            <div className="">
+              <Button
+                variant="ghost"
+                size={"icon"}
+                onClick={() => selectCourt(court, "detail")}
+              >
                 <EllipsisVertical className="size-4" />
               </Button>
-              <Button size={"sm"} onClick={() => selectCourt(court, "edit")}>
+              <Button
+                variant="ghost"
+                size={"icon"}
+                onClick={() => selectCourt(court, "edit")}
+              >
                 <PenIcon className="size-4" />
               </Button>
             </div>
@@ -58,7 +66,6 @@ export const CourtList: React.FC = () => {
               </>
             ) : (
               <>
-                <p>{selectedCourt.name}</p>
                 <WorkhourList worhHours={selectedCourt?.workhours} />
               </>
             )}

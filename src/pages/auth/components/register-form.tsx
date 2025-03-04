@@ -20,13 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AuthServices } from "@/services/auth.services";
-
-import { useNavigate } from "react-router";
-import { IUser, UserZodSchema } from "@/models/user.model";
+import { ICreateUser, UserZodSchema } from "@/models/user.model";
 interface INewAuth {
   confirmPassword: string;
 }
-const EMPTY_TENANT_DATA: IUser & INewAuth = {
+const DEFAULT_DATA: ICreateUser & INewAuth = {
   email: "",
   lastName: "",
   name: "",
@@ -38,27 +36,16 @@ const EMPTY_TENANT_DATA: IUser & INewAuth = {
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
 
-  const nav = useNavigate();
-  const form = useForm<IUser & INewAuth>({
+  const form = useForm<ICreateUser & INewAuth>({
     resolver: zodResolver(UserZodSchema),
-    defaultValues: EMPTY_TENANT_DATA,
+    defaultValues: DEFAULT_DATA,
   });
 
-  const handleCloseDialog = (value: boolean) => {
-    if (!value) {
-      setOpen(false);
-      nav("/login");
-    }
-  };
-
-  const onSubmit = async (values: IUser) => {
+  const onSubmit = async (values: ICreateUser) => {
     setLoading(true);
     try {
       await AuthServices.register(values);
-
-      setOpen(true);
     } catch (error) {
       console.error(error);
     } finally {

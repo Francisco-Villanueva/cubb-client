@@ -15,7 +15,7 @@ export default function WorkhourList({
     { short: "sab", long: "sábado" },
   ];
   return (
-    <div className={`grid grid-cols-2 gap-2`}>
+    <div className={`flex flex-col gap-2`}>
       {worhHours.map(({ day, segments }) => (
         <div key={day} className=" border p-1 w-full">
           <p className=" font-bold uppercase ">{DAYS[day].short}</p>

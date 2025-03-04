@@ -1,6 +1,6 @@
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
 import { ILoginResponse } from "@/interfaces/auth";
-import { IUser } from "@/models/user.model";
+import { ICreateUser, IUser } from "@/models/user.model";
 import axios from "axios";
 
 export class AuthServices {
@@ -9,7 +9,7 @@ export class AuthServices {
 
     return response.data;
   }
-  static async register(data: IUser) {
+  static async register(data: ICreateUser) {
     const response = await axios.post(`${BASE_URL}/auth/register`, data);
 
     return response.data;
