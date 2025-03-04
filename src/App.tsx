@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
+import { NavBar } from "./components/nav-bar";
+import { Route, Routes } from "react-router";
+import { AuthPage } from "./pages/auth/page/auth-page";
+import { ProtectedRoute } from "./components/routes/route-protecter";
 import "./App.css";
-import { CourtServices } from "./services/court.services";
-import { ICourt } from "./models/court.model";
+import { MainPage } from "./pages/main/components/main-page";
 
 function App() {
-  const [courts, setCourts] = useState<ICourt[]>([]);
-
-  useEffect(() => {
-    const fetchCoutrs = async () => {
-      const courtsRes = await CourtServices.getAll();
-
-      setCourts(courtsRes);
-    };
-    fetchCoutrs();
-  }, []);
-
   return (
     <>
-      <div>
-        {courts.map((court) => (
-          <div>
-            <h2>{court.name}</h2>
-          </div>
-        ))}
+      <div className="flex flex-col h-screen ">
+        <NavBar />
+        <div className="flex-grow h-[90vh] max-h-[90vh] overflow-auto">
+          <Routes>
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <MainPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<AuthPage type="login" />} />
+            <Route path="/register" element={<AuthPage type="register" />} />
+          </Routes>
+        </div>
       </div>
     </>
   );
