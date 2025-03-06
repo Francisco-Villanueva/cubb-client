@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router";
 import { AuthPage } from "./pages/auth/page/auth-page";
 import { ProtectedRoute } from "./components/routes/route-protecter";
 import "./App.css";
-import { MainPage } from "./pages/main/components/main-page";
+import { MainPage } from "./pages/main/pages/main-page";
 
 function App() {
   return (

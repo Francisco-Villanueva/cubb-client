@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, Fragment } from "react";
 import { ICourt } from "../../../models/court.model";
 import { AppointmnetServices } from "../../../services/appointmnets.services";
 import { LoaderWrapper } from "../../../components/common/loader-wrapper";
+import { Input } from "@/components/ui/input";
 
 interface CourtsMapProps {
   courts: ICourt[];
@@ -25,6 +26,8 @@ const courtsPosition = {
 export const CourtsMap = ({ courts }: CourtsMapProps) => {
   const [availableList, setAvailableList] = useState<IAvailableList[]>([]);
   const [selectedCancha, setSelectedCancha] = useState("");
+  const [date, setDate] = useState(new Date().toISOString());
+
   const [loading, setLoading] = useState(false);
   const [mappedCourts, setMappedCourts] = useState<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,16 +60,29 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
     setMappedCourts(res);
   }, [courts]);
 
+  const handleChangeDate = async (newDate: string) => {
+    setDate(newDate);
+    if (!selectedCancha) return;
+    try {
+      setLoading(true);
+      const res = await AppointmnetServices.getSlotsBycourtId(
+        selectedCancha,
+        newDate,
+        90
+      );
+      setAvailableList(res.availableTimes);
+    } catch (error) {
+      console.log("Error obteniendo horarios", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleClick = async (id: string) => {
     setSelectedCancha(id);
 
     try {
       setLoading(true);
-      const res = await AppointmnetServices.getSlotsBycourtId(
-        id,
-        new Date().toISOString(),
-        90
-      );
+      const res = await AppointmnetServices.getSlotsBycourtId(id, date, 90);
       setAvailableList(res.availableTimes);
     } catch (error) {
       console.log("Error obteniendo horarios", error);
@@ -80,154 +96,166 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
   // Cálculo de escala para ajustar las canchas dinámicamente
   const scaleFactor = Math.min(stageSize.width / 800, stageSize.height / 800);
 
+  console.log(new Date().toLocaleDateString());
   return (
-    <div className="size-full flex">
-      <div ref={containerRef} className="  w-1/2        ">
-        <Stage
-          width={stageSize.width}
-          height={stageSize.height}
-          scaleX={scaleFactor}
-          scaleY={scaleFactor}
-          className=" pl-6"
-        >
-          <Layer>
-            {mappedCourts.map((cancha) => {
-              const isVertical = cancha.height === 200;
+    <div className="size-full flex flex-col">
+      <Input
+        type="date"
+        onChange={(e) =>
+          handleChangeDate(new Date(e.target.value).toISOString())
+        }
+        // value={new Date(date).toLocaleDateString()}
+      />
+      <section className="flex">
+        <div ref={containerRef} className="  w-1/2        ">
+          <Stage
+            width={stageSize.width}
+            height={stageSize.height}
+            scaleX={scaleFactor}
+            scaleY={scaleFactor}
+            className=" pl-6"
+          >
+            <Layer>
+              {mappedCourts.map((cancha) => {
+                const isVertical = cancha.height === 200;
 
-              return (
-                <Fragment key={cancha.id}>
-                  {/* Fondo de la cancha */}
-                  <Rect
-                    x={cancha.x}
-                    y={cancha.y}
-                    width={cancha.width}
-                    height={cancha.height}
-                    fill={selectedCancha === cancha.id ? "#2ECC71" : "#1E8449"} // Verde más natural
-                    stroke="white"
-                    strokeWidth={2}
-                    onClick={() => handleClick(cancha.id)}
-                    cornerRadius={10}
-                  />
+                return (
+                  <Fragment key={cancha.id}>
+                    {/* Fondo de la cancha */}
+                    <Rect
+                      x={cancha.x}
+                      y={cancha.y}
+                      width={cancha.width}
+                      height={cancha.height}
+                      fill={
+                        selectedCancha === cancha.id ? "#2ECC71" : "#1E8449"
+                      } // Verde más natural
+                      stroke="white"
+                      strokeWidth={2}
+                      onClick={() => handleClick(cancha.id)}
+                      cornerRadius={10}
+                    />
 
-                  {/* Línea central */}
-                  <Line
-                    points={
-                      isVertical
-                        ? [
-                            cancha.x,
-                            cancha.y + cancha.height / 2,
-                            cancha.x + cancha.width,
-                            cancha.y + cancha.height / 2,
-                          ]
-                        : [
-                            cancha.x + cancha.width / 2,
+                    {/* Línea central */}
+                    <Line
+                      points={
+                        isVertical
+                          ? [
+                              cancha.x,
+                              cancha.y + cancha.height / 2,
+                              cancha.x + cancha.width,
+                              cancha.y + cancha.height / 2,
+                            ]
+                          : [
+                              cancha.x + cancha.width / 2,
+                              cancha.y,
+                              cancha.x + cancha.width / 2,
+                              cancha.y + cancha.height,
+                            ]
+                      }
+                      stroke="white"
+                      strokeWidth={2}
+                    />
+
+                    {/* Círculo central */}
+                    <Circle
+                      x={cancha.x + cancha.width / 2}
+                      y={cancha.y + cancha.height / 2}
+                      radius={15}
+                      stroke="white"
+                      strokeWidth={2}
+                    />
+
+                    {/* Arcos en los extremos */}
+                    {isVertical ? (
+                      <>
+                        {/* Arco superior */}
+                        <Line
+                          points={[
+                            cancha.x + 20,
                             cancha.y,
-                            cancha.x + cancha.width / 2,
+                            cancha.x + cancha.width - 20,
+                            cancha.y,
+                          ]}
+                          stroke="white"
+                          strokeWidth={2}
+                        />
+                        {/* Arco inferior */}
+                        <Line
+                          points={[
+                            cancha.x + 20,
                             cancha.y + cancha.height,
-                          ]
-                    }
-                    stroke="white"
-                    strokeWidth={2}
-                  />
+                            cancha.x + cancha.width - 20,
+                            cancha.y + cancha.height,
+                          ]}
+                          stroke="white"
+                          strokeWidth={2}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {/* Arco izquierdo */}
+                        <Line
+                          points={[
+                            cancha.x,
+                            cancha.y + 20,
+                            cancha.x,
+                            cancha.y + cancha.height - 20,
+                          ]}
+                          stroke="white"
+                          strokeWidth={2}
+                        />
+                        {/* Arco derecho */}
+                        <Line
+                          points={[
+                            cancha.x + cancha.width,
+                            cancha.y + 20,
+                            cancha.x + cancha.width,
+                            cancha.y + cancha.height - 20,
+                          ]}
+                          stroke="white"
+                          strokeWidth={2}
+                        />
+                      </>
+                    )}
 
-                  {/* Círculo central */}
-                  <Circle
-                    x={cancha.x + cancha.width / 2}
-                    y={cancha.y + cancha.height / 2}
-                    radius={15}
-                    stroke="white"
-                    strokeWidth={2}
-                  />
+                    {/* Nombre de la cancha */}
+                    <Text
+                      text={cancha.name}
+                      x={cancha.x}
+                      y={cancha.y - 15}
+                      fontSize={14}
+                      fill="black"
+                      align="center"
+                      fontStyle="bold"
+                      width={cancha.width}
+                      wrap="word"
+                    />
+                  </Fragment>
+                );
+              })}
+            </Layer>
+          </Stage>
+        </div>
 
-                  {/* Arcos en los extremos */}
-                  {isVertical ? (
-                    <>
-                      {/* Arco superior */}
-                      <Line
-                        points={[
-                          cancha.x + 20,
-                          cancha.y,
-                          cancha.x + cancha.width - 20,
-                          cancha.y,
-                        ]}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                      {/* Arco inferior */}
-                      <Line
-                        points={[
-                          cancha.x + 20,
-                          cancha.y + cancha.height,
-                          cancha.x + cancha.width - 20,
-                          cancha.y + cancha.height,
-                        ]}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      {/* Arco izquierdo */}
-                      <Line
-                        points={[
-                          cancha.x,
-                          cancha.y + 20,
-                          cancha.x,
-                          cancha.y + cancha.height - 20,
-                        ]}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                      {/* Arco derecho */}
-                      <Line
-                        points={[
-                          cancha.x + cancha.width,
-                          cancha.y + 20,
-                          cancha.x + cancha.width,
-                          cancha.y + cancha.height - 20,
-                        ]}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                    </>
-                  )}
+        {/* Lista de horarios disponibles */}
+        <div className=" flex flex-col  gap-4 p-4 w-1/2 text-gray-800 ">
+          <LoaderWrapper loading={loading} text="Cargando horarios...">
+            <h3>Horarios de la cancha seleccionada</h3>
 
-                  {/* Nombre de la cancha */}
-                  <Text
-                    text={cancha.name}
-                    x={cancha.x}
-                    y={cancha.y - 15}
-                    fontSize={14}
-                    fill="black"
-                    align="center"
-                    fontStyle="bold"
-                    width={cancha.width}
-                    wrap="word"
-                  />
-                </Fragment>
-              );
-            })}
-          </Layer>
-        </Stage>
-      </div>
-
-      {/* Lista de horarios disponibles */}
-      <div className=" flex flex-col  gap-4 p-4 w-1/2 text-gray-800 ">
-        <LoaderWrapper loading={loading} text="Cargando horarios...">
-          <h3>Horarios de la cancha seleccionada</h3>
-
-          <section className="grid grid-cols-3 gap-4">
-            {availableList.map((value) => (
-              <div
-                className=" w-full h-36 grid place-items-center border rounded-lg p-4 text-center cursor-pointer hover:bg-green-500 hover:text-white transition-all duration-300"
-                key={value.hs}
-              >
-                <p className="font-semibold">{value.hs}</p>
-              </div>
-            ))}
-          </section>
-        </LoaderWrapper>
-      </div>
+            <section className="grid grid-cols-3 gap-4">
+              {availableList.map((value) => (
+                <div
+                  className=" w-full h-36 grid place-items-center border rounded-lg p-4 text-center cursor-pointer hover:bg-green-500 hover:text-white transition-all duration-300"
+                  key={value.hs}
+                >
+                  <p className="font-semibold">{value.hs}</p>
+                </div>
+              ))}
+            </section>
+          </LoaderWrapper>
+        </div>
+      </section>
     </div>
   );
 };

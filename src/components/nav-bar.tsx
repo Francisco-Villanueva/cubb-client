@@ -55,6 +55,14 @@ export function NavBar() {
                   </Link>
                 </DropdownMenuItem>
               )}
+              {user.role === ROLES.TEAM_ADMIN && (
+                <DropdownMenuItem>
+                  <Link to={"/profile"} className="flex items-center gap-1">
+                    <PanelsLeftBottom className="size-4" />
+                    Administrar
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={handleLogOut}
                 className="flex items-center gap-1 cursor-pointer"
