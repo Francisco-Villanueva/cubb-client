@@ -4,6 +4,7 @@ import { ICourt } from "../../../models/court.model";
 import { AppointmnetServices } from "../../../services/appointmnets.services";
 import { LoaderWrapper } from "../../../components/common/loader-wrapper";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
 
 interface CourtsMapProps {
   courts: ICourt[];
@@ -26,7 +27,7 @@ const courtsPosition = {
 export const CourtsMap = ({ courts }: CourtsMapProps) => {
   const [availableList, setAvailableList] = useState<IAvailableList[]>([]);
   const [selectedCancha, setSelectedCancha] = useState("");
-  const [date, setDate] = useState(new Date().toISOString());
+  const [date, setDate] = useState<Date | undefined>(new Date());
 
   const [loading, setLoading] = useState(false);
   const [mappedCourts, setMappedCourts] = useState<any[]>([]);
@@ -61,7 +62,7 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
   }, [courts]);
 
   const handleChangeDate = async (newDate: string) => {
-    setDate(newDate);
+    setDate(new Date(newDate));
     if (!selectedCancha) return;
     try {
       setLoading(true);
@@ -79,10 +80,14 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
   };
   const handleClick = async (id: string) => {
     setSelectedCancha(id);
-
+    if (!date) return;
     try {
       setLoading(true);
-      const res = await AppointmnetServices.getSlotsBycourtId(id, date, 90);
+      const res = await AppointmnetServices.getSlotsBycourtId(
+        id,
+        date.toISOString(),
+        90
+      );
       setAvailableList(res.availableTimes);
     } catch (error) {
       console.log("Error obteniendo horarios", error);
@@ -99,6 +104,12 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
   console.log(new Date().toLocaleDateString());
   return (
     <div className="size-full flex flex-col">
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+        className="rounded-md border shadow"
+      />
       <Input
         type="date"
         onChange={(e) =>

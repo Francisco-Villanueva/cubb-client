@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/store/hooks";
 import TeamForm from "../components/teams/create-team-fotm";
-import { EllipsisVertical, Shield } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import CreateTeamAdminForm from "../components/teams/create-admin-form";
 import { ITeam } from "@/models/team.model";
+import { TeamCard } from "@/pages/profile/components/team-card";
 type ActionType = "edit" | "createAdmin" | "delete";
 export function TeamsPage() {
   const { teams } = useAppSelector((s) => s.team);
@@ -30,20 +31,10 @@ export function TeamsPage() {
       <div className=" p-2 flex flex-col gap-2">
         {teams.map((team) => (
           <div className=" border p-1">
-            <div className="flex justify-between w-full p-1">
+            <div className="flex justify-between w-full ">
+              <TeamCard team={team} size="sm" />
+
               <div className="flex items-center gap-1">
-                {team.shield ? (
-                  <img
-                    src={team.shield}
-                    className="size-[50px] aspect-square object-cover"
-                  />
-                ) : (
-                  <Shield />
-                )}
-                <p>{team.name}</p>
-              </div>
-              <div className="flex items-center gap-1">
-                <p>{team.category}</p>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <Button variant="ghost" size={"icon"}>

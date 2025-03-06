@@ -6,21 +6,34 @@ import {
   CircleDollarSign,
   ClockIcon,
   MapPinned,
+  Shield,
 } from "lucide-react";
 
 interface TeamCardProps {
   team: ITeam;
   showNextMatch?: boolean;
+  size?: "sm" | "md" | "lg";
 }
-export function TeamCard({ team, showNextMatch }: TeamCardProps) {
+export function TeamCard({ team, showNextMatch, size = "md" }: TeamCardProps) {
   return (
-    <div className="p-4 flex items-center gap-4 h-32  ">
-      <img
-        src="/tercera-logo.jpg"
-        alt="la tercera fc"
-        className="aspect-square size-20 object-cover rounded-2xl "
-      />
-      <div>
+    <div
+      className={` p-2  flex  items-center gap-4 ${
+        size === "lg" ? "h-32" : size === "md" ? "h-24" : "h-16"
+      } `}
+    >
+      <div className="h-full">
+        {team.shield ? (
+          <img
+            src={team.shield}
+            alt="la tercera fc"
+            className="aspect-square h-full object-cover rounded-2xl "
+          />
+        ) : (
+          <Shield className="size-full" />
+        )}
+      </div>
+
+      <div className="  ">
         <CardTitle>{team.name}</CardTitle>
         <CardDescription>Categoría: {team.category}</CardDescription>
       </div>
