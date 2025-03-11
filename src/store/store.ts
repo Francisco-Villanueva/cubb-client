@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import CourtReducer from "./slices/court.slice";
 import UserReducer from "./slices/user.slice";
 import TeamReducer from "./slices/team.slice";
+import AppointmnetReducer from "./slices/appointments.slice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       courts: CourtReducer,
       user: UserReducer,
       team: TeamReducer,
+      appointments: AppointmnetReducer,
     },
   });
 };

@@ -16,7 +16,6 @@ export function ProfilePage() {
 
   const team = teams.find((el) => el.id === user.TeamId);
 
-  console.log({ user, teams, team });
   if (!team) return;
 
   return (

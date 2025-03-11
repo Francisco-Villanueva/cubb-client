@@ -5,10 +5,10 @@ import { UserTeamDetails } from "../components/user-team-details";
 export function HomePage() {
   const { courts } = useAppSelector((s) => s.courts);
   return (
-    <div className="space-y-4">
+    <div className="space-y-4  size-full flex flex-col">
       <UserTeamDetails />
-      <hr />
-      <section className="flex items-center justify-center ">
+
+      <section className="flex items-center justify-center  flex-grow ">
         {courts.length ? <CourtsMap courts={courts} /> : null}
       </section>
     </div>
