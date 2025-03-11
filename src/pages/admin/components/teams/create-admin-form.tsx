@@ -12,27 +12,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { message } from "antd";
-import { CreateTeamAdminZodSchema, ICreateUser } from "@/models/user.model";
+import {
+  CreateTeamAdminZodSchema,
+  ICreateUser,
+  IUser,
+} from "@/models/user.model";
 import { AuthServices } from "@/services/auth.services";
 import { ITeam } from "@/models/team.model";
 import { XIcon } from "lucide-react";
+import { UsersServices } from "@/services/user.services";
 interface INewAuth {
   confirmPassword: string;
 }
 export default function CreateTeamAdminForm({
   team,
   handleClose,
+  teamAdmin,
 }: {
   team: ITeam;
+  teamAdmin?: IUser;
   handleClose: () => void;
 }) {
   const DEFAULT_DATA: ICreateUser & INewAuth = {
-    email: "",
-    lastName: "",
-    name: "",
+    email: !!teamAdmin ? teamAdmin.email : "",
+    lastName: !!teamAdmin ? teamAdmin.email : "",
+    name: !!teamAdmin ? teamAdmin.name : "",
     password: "",
     confirmPassword: "",
-    userName: "",
+    userName: !!teamAdmin ? teamAdmin.userName : "",
     role: "TEAM_ADMIN",
     TeamId: team.id,
   };
@@ -43,15 +50,20 @@ export default function CreateTeamAdminForm({
 
   const onSubmit = async (data: ICreateUser) => {
     try {
-      await AuthServices.register(data);
-      message.success("Admin creado correctamente");
-      form.reset();
+      if (!!teamAdmin) {
+        await UsersServices.update(teamAdmin.id, data);
+        message.success("Admin actualizado correctamente");
+      } else {
+        await AuthServices.register(data);
+        message.success("Admin creado correctamente");
+        form.reset();
+      }
     } catch (error) {
-      console.log("Error creating court", error);
+      console.log("Error creating user", error);
       if (typeof error === "string") {
         message.error(error);
       }
-      message.error("Error creando la cancha");
+      message.error("Error creando usuario");
     }
   };
 
@@ -121,7 +133,11 @@ export default function CreateTeamAdminForm({
               )}
             />
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Creando..." : "Crear"}
+              {form.formState.isSubmitting
+                ? "Creando..."
+                : !!teamAdmin
+                ? "Actualizar"
+                : "Crear"}
             </Button>
           </form>
         </Form>
