@@ -5,6 +5,7 @@ import { AdminPage } from "@/pages/admin/pages/admin-page";
 import { AdminRouteProtecter } from "@/components/routes/admin-route-protecter";
 import { HomePage } from "./home-page";
 import { ProfilePage } from "@/pages/profile/pages/profile-page";
+import { AppointmentsPage } from "@/pages/appointmnets/page/appointmnets-page";
 
 export function MainPage() {
   return (
@@ -14,6 +15,7 @@ export function MainPage() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/turnos" element={<AppointmentsPage />} />
             <Route
               path="/admin/*"
               element={

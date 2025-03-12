@@ -11,5 +11,5 @@ export function UserTeamDetails() {
 
   if (!team) return;
 
-  return <TeamCard team={team} showNextMatch size="lg" />;
+  return <TeamCard team={team} showNextMatch size="lg" direction="vertical" />;
 }

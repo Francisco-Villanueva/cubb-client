@@ -1,4 +1,3 @@
-import { TeamCard } from "@/pages/profile/components/team-card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +16,7 @@ import { ROLES } from "@/interfaces/roles";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { TeamShield } from "@/components/common/team-shield";
 
 interface TeamItemListProps {
   team: ITeam;
@@ -39,7 +39,9 @@ export function TeamListItem({ team }: TeamItemListProps) {
   return (
     <div className=" border p-1">
       <div className="flex justify-between w-full ">
-        <TeamCard team={team} size="sm" />
+        <div className="h-14">
+          <TeamShield team={team} showDescription />
+        </div>
 
         <div className="flex items-center gap-1">
           <DropdownMenu>

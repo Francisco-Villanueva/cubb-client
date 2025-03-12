@@ -16,7 +16,10 @@ interface AppointmentDetailsProps {
 }
 export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   const { courts } = useAppSelector((s) => s.courts);
+  const { teams } = useAppSelector((s) => s.team);
   const court = courts.find((c) => c.id === appointment.CourtId);
+  const localTeam = teams.find((c) => c.id === appointment.TeamId);
+
   const [rival, setRival] = useState<ITeam | undefined>();
 
   useEffect(() => {
@@ -31,21 +34,39 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   }, []);
   return (
     <section className="flex justify-between items-center gap-8 px-4 py-2">
-      {rival ? (
-        <div className="flex flex-col items-center ">
-          <img
-            src="https://ligacubb.com/imagenes/liverfull.png"
-            alt="la tercera fc"
-            className="aspect-square size-12 object-cover rounded-full "
-          />
-          <p>Liverfull FC</p>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center  text-gray-600">
-          <ShieldQuestion className="size-12" />
-          <i>No definido</i>
-        </div>
-      )}
+      <div className="flex items-center gap-2">
+        {localTeam ? (
+          <div className="flex flex-col items-center ">
+            <img
+              src={localTeam?.shield}
+              alt={localTeam?.name}
+              className="aspect-square size-12 object-cover rounded-full "
+            />
+            <p>{localTeam.name}</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center  text-gray-600">
+            <ShieldQuestion className="size-12" />
+            <i>No definido</i>
+          </div>
+        )}
+        <p>vs</p>
+        {rival ? (
+          <div className="flex flex-col items-center ">
+            <img
+              src="https://ligacubb.com/imagenes/liverfull.png"
+              alt="la tercera fc"
+              className="aspect-square size-12 object-cover rounded-full "
+            />
+            <p>Liverfull FC</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center  text-gray-600">
+            <ShieldQuestion className="size-12" />
+            <i>No definido</i>
+          </div>
+        )}
+      </div>
       <div className="text-gray-700 font-semibold">
         <div className="flex items-center gap-2">
           <CalendarIcon className="size-4" />

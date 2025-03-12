@@ -28,7 +28,12 @@ export function NavBar() {
         <img src="/logo.jpg" className="size-20 aspect-square rounded-full" />
       </Link>
 
-      {user && user.role === "ADMIN" && (
+      {user && user.role === ROLES.TEAM_ADMIN && (
+        <section className="text-gray-50 flex items-center gap-8">
+          <Link to={"/turnos"}>Sacar turno</Link>
+        </section>
+      )}
+      {user && user.role === ROLES.ADMIN && (
         <section className="text-gray-50 flex items-center gap-8">
           <Link to={"/admin/courts"}>Canchas</Link>
           <Link to={"/admin/teams"}>Equipos</Link>

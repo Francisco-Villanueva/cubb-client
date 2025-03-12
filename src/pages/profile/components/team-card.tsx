@@ -1,15 +1,19 @@
 import { AppointmentDetails } from "@/components/common/appointmnet-details";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { TeamShield } from "@/components/common/team-shield";
+import { Card } from "@/components/ui/card";
 import { ITeam } from "@/models/team.model";
 import { useAppSelector } from "@/store/hooks";
-import { Shield } from "lucide-react";
-
 interface TeamCardProps {
   team: ITeam;
   showNextMatch?: boolean;
   size?: "sm" | "md" | "lg";
+  direction?: "vertical" | "horzintal";
 }
-export function TeamCard({ team, showNextMatch, size = "md" }: TeamCardProps) {
+export function TeamCard({
+  team,
+  showNextMatch,
+  direction = "horzintal",
+}: TeamCardProps) {
   const { appointments } = useAppSelector((s) => s.appointments);
 
   const nextAppointment = appointments
@@ -20,28 +24,14 @@ export function TeamCard({ team, showNextMatch, size = "md" }: TeamCardProps) {
     )
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
-  console.log({ nextAppointment });
   return (
     <div
-      className={` p-2  flex  items-center gap-4 ${
-        size === "lg" ? "h-32" : size === "md" ? "h-24" : "h-16"
-      } `}
+      className={` p-2  flex  items-center   h-full  gap-4  ${
+        direction === "vertical" ? "flex-col" : "flex-row"
+      }   `}
     >
-      <div className="h-full">
-        {team.shield ? (
-          <img
-            src={team.shield}
-            alt="la tercera fc"
-            className="aspect-square h-full object-cover rounded-2xl "
-          />
-        ) : (
-          <Shield className="size-full" />
-        )}
-      </div>
-
-      <div className="  ">
-        <CardTitle>{team.name}</CardTitle>
-        <CardDescription>Categoría: {team.category}</CardDescription>
+      <div className="h-40">
+        <TeamShield team={team} showDescription direction={direction} />
       </div>
 
       {showNextMatch && (
