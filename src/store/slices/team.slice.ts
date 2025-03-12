@@ -5,17 +5,22 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface SessionState extends IStoreState {
   teams: ITeam[];
   inmutableTeams: ITeam[];
+  userTeamId: string;
 }
 const initialState: SessionState = {
   teams: [],
   inmutableTeams: [],
   loading: false,
   fetched: false,
+  userTeamId: "",
 };
 const teamSlice = createSlice({
   name: "team",
   initialState,
   reducers: {
+    setUserTeamId(state, action: PayloadAction<string>) {
+      state.userTeamId = action.payload;
+    },
     setTeams(state, action: PayloadAction<ITeam[]>) {
       state.teams = action.payload;
       state.inmutableTeams = action.payload;
@@ -55,6 +60,6 @@ const teamSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addTeam, editTeam, setTeams } = teamSlice.actions;
+export const { addTeam, editTeam, setTeams, setUserTeamId } = teamSlice.actions;
 
 export default teamSlice.reducer;

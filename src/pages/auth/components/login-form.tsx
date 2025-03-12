@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { setAuthInterceptor } from "@/config/axios.config";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/user.slice";
+import { setUserTeamId } from "@/store/slices/team.slice";
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ export function LoginForm() {
       localStorage.setItem("accessToken", res.backendTokens.accessToken);
       localStorage.setItem("userLogged", JSON.stringify(res.user));
       dispatch(setUser(res.user));
-
+      if (res.user.TeamId) dispatch(setUserTeamId(res.user.TeamId));
       location.replace("/"); // This is forcing a reload at the navigatin page!
     } catch (error) {
     } finally {

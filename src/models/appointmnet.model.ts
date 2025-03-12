@@ -38,5 +38,20 @@ export const CancelAppointmentZodSchema = z.object({
   UserId: z.string().min(1),
   appointmemntId: z.string().min(1),
 });
-
+export const CreateAppointmentSchema = z.object({
+  name: z.string(),
+  time: z.string().min(1),
+  price: z.number(),
+  duration: z.number(),
+  date: z
+    .string()
+    .trim()
+    .refine((value) => isoStringRegex.test(value), {
+      message:
+        "Date must be a valid ISO 8601 string including time and timezone",
+    }),
+  CourtId: z.string().min(1),
+  TeamId: z.string().min(1),
+});
 export type IAppointment = z.infer<typeof AppointmentZodSchema>;
+export type ICreateAppointment = z.infer<typeof CreateAppointmentSchema>;

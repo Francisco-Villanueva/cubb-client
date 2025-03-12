@@ -5,6 +5,9 @@ import { LoaderWrapper } from "../../../components/common/loader-wrapper";
 
 import { Calendar } from "@/components/ui/calendar";
 import { MapPinned } from "lucide-react";
+import { ICreateAppointment } from "@/models/appointmnet.model";
+import { useAppSelector } from "@/store/hooks";
+import { Button } from "@/components/ui/button";
 
 interface CourtsMapProps {
   courts: ICourt[];
@@ -16,21 +19,36 @@ type IAvailableList = {
 };
 
 export const CourtsMap = ({ courts }: CourtsMapProps) => {
+  const { user } = useAppSelector((s) => s.user);
   const [availableList, setAvailableList] = useState<IAvailableList[]>([]);
-  const [selectedCancha, setSelectedCancha] = useState("");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date()); // date state for calendar
   const [loading, setLoading] = useState(false);
-
+  const [appointmnetData, setAppointmnetData] = useState<ICreateAppointment>({
+    date: "",
+    duration: 90,
+    price: 0,
+    name: "",
+    CourtId: "",
+    TeamId: user?.TeamId || "",
+    time: "",
+  });
   const handleChangeDate = async (newDate?: Date) => {
     setDate(newDate);
-    if (!selectedCancha || !newDate) return;
+    if (!appointmnetData.CourtId || !newDate) return;
+    setAppointmnetData((s) => ({
+      ...s,
+      date: newDate?.toISOString(),
+      time: "",
+    }));
     try {
       setLoading(true);
+      console.log(newDate.toISOString());
       const res = await AppointmnetServices.getSlotsBycourtId(
-        selectedCancha,
+        appointmnetData.CourtId,
         newDate.toISOString(),
         90
       );
+      console.log("res", res);
       setAvailableList(res.availableTimes);
     } catch (error) {
       console.log("Error obteniendo horarios", error);
@@ -38,10 +56,10 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
       setLoading(false);
     }
   };
-  const handleClick = async (id: string) => {
-    setSelectedCancha(id);
+  const handleSelectCourt = async (id: string) => {
+    setAppointmnetData((s) => ({ ...s, CourtId: id, time: "" }));
     if (!date) return;
-    if (selectedCancha === id) return;
+    if (appointmnetData.CourtId === id) return;
     try {
       setLoading(true);
       const res = await AppointmnetServices.getSlotsBycourtId(
@@ -57,6 +75,10 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
     }
   };
 
+  const handleSelectTime = (time: string) => {
+    setAppointmnetData((s) => ({ ...s, time }));
+  };
+
   return (
     <div className="size-full flex flex-col ">
       <Calendar
@@ -70,11 +92,11 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
           {courts.map((court) => (
             <div
               className={`flex items-center gap-2 p-2 border   transition-all duration-150 cursor-pointer ${
-                selectedCancha === court.id
+                appointmnetData.CourtId === court.id
                   ? "bg-green-600 text-white font-semibold hover:bg-"
                   : "hover:bg-accent"
               }`}
-              onClick={() => handleClick(court.id)}
+              onClick={() => handleSelectCourt(court.id)}
             >
               <MapPinned className="size-4" />
               <p>{court.name}</p>
@@ -88,12 +110,23 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
 
             <section className="flex flex-col gap-2  w-full">
               {availableList.map((value) => (
-                <div
-                  className=" w-full h-16 grid place-items-center border rounded-lg p-4 text-center cursor-pointer hover:bg-green-500 hover:text-white transition-all duration-300"
+                <Button
+                  variant={
+                    appointmnetData.time === value.hs
+                      ? "secondary"
+                      : "secondary"
+                  }
+                  onClick={() => handleSelectTime(value.hs)}
+                  disabled={!value.available}
+                  className={` ${
+                    appointmnetData.time === value.hs
+                      ? "bg-green-600 text-white font-semibold hover:bg-"
+                      : ""
+                  } w-full h-16  p-4 text-center `}
                   key={value.hs}
                 >
                   <p className="font-semibold">{value.hs}</p>
-                </div>
+                </Button>
               ))}
             </section>
           </LoaderWrapper>
