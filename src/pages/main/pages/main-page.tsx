@@ -11,7 +11,7 @@ export function MainPage() {
   return (
     <DataProvider>
       <SessionProvider>
-        <div className=" py-4 w-[800px] max-w-[800px] h-[90vh] max-h-[90vh] overflow-auto mx-auto  ">
+        <div className=" container  p-4 max-w-[800px]  h-[90vh] max-h-[90vh] overflow-auto mx-auto   ">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />

@@ -26,8 +26,8 @@ export function TeamCard({
 
   return (
     <div
-      className={` p-2  flex  items-center   h-full  gap-4  ${
-        direction === "vertical" ? "flex-col" : "flex-row"
+      className={` p-2  flex   items-center   h-full   gap-4  ${
+        direction === "vertical" ? "flex-col w-full " : "flex-row"
       }   `}
     >
       <div className="h-40">
@@ -43,12 +43,12 @@ export function TeamCard({
               </p>
             </Card>
           ) : (
-            <Card className="  p-1 px-2 flex-grow rounded-none ml-4  text-sm">
+            <div className=" flex-grow rounded-none w-full">
               <p className="font-semibold text-gray-800 text-center ">
                 Próximo partido
               </p>
               <AppointmentDetails appointment={nextAppointment} />
-            </Card>
+            </div>
           )}
         </div>
       )}

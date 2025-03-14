@@ -33,8 +33,8 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
     fetchData();
   }, []);
   return (
-    <section className="flex justify-between items-center gap-8 px-4 py-2">
-      <div className="flex items-center gap-2">
+    <section className="flex flex-col shadow-md border justify-between items-center p-4 rounded-md gap-2 w-full ">
+      <div className="flex items-center justify-around gap-2 w-full">
         {localTeam ? (
           <div className="flex flex-col items-center ">
             <img
@@ -67,26 +67,29 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
           </div>
         )}
       </div>
-      <div className="text-gray-700 font-semibold">
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="size-4" />
-          <FromatedDate date={new Date(appointment.date).toISOString()} />
+      <hr className="w-full" />
+      <section className="flex items-center justify-between gap-4 w-full">
+        <div className="text-gray-700 font-semibold">
+          <div className="flex items-center gap-2">
+            <CalendarIcon className="size-4" />
+            <FromatedDate date={new Date(appointment.date).toISOString()} />
+          </div>
+          <div className="flex items-center gap-2">
+            <ClockIcon className="size-4" />
+            <p>{appointment.time} hs</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <ClockIcon className="size-4" />
-          <p>{appointment.time} hs</p>
+        <div className="text-gray-700 font-semibold">
+          <div className="flex items-center gap-2">
+            <MapPinned className="size-4" />
+            <p>{court?.name}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <CircleDollarSign className="size-4" />
+            <p>$47.000</p>
+          </div>
         </div>
-      </div>
-      <div className="text-gray-700 font-semibold">
-        <div className="flex items-center gap-2">
-          <MapPinned className="size-4" />
-          <p>{court?.name}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <CircleDollarSign className="size-4" />
-          <p>$47.000</p>
-        </div>
-      </div>
+      </section>
     </section>
   );
 }
