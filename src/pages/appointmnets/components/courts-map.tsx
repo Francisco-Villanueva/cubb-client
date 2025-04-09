@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { MapPinned } from "lucide-react";
+import { CheckCircle, MapPinned } from "lucide-react";
 import {
   CreateAppointmentSchema,
   ICreateAppointment,
@@ -19,6 +19,7 @@ import { useAppSelector } from "@/store/hooks";
 import { Button } from "@/components/ui/button";
 import { message } from "antd";
 import { fetchCreate } from "@/store/utils/fetchCreate";
+import { FromatedDate } from "@/components/common/format-date";
 interface CourtsMapProps {
   courts: ICourt[];
 }
@@ -34,8 +35,9 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date()); // date state for calendar
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const [appointmnetData, setAppointmnetData] = useState<ICreateAppointment>({
-    date: "",
+    date: new Date().toISOString(),
     duration: 90,
     price: 0,
     name: "",
@@ -95,15 +97,7 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
       CreateAppointmentSchema.parse(appointmnetData);
       await createAppointment(appointmnetData);
       message.success("Reserva creada correctamente");
-      setAppointmnetData({
-        date: "",
-        duration: 90,
-        price: 0,
-        name: "",
-        CourtId: "",
-        TeamId: user?.TeamId || "",
-        time: "",
-      });
+      setIsConfirmed(false);
     } catch (error) {
       console.log("first error", error);
       console.log(
@@ -118,6 +112,48 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
     console.log(res);
     // Here you can call the service to create the appointment
   };
+
+  if (isConfirmed)
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <div className="bg-white shadow-md rounded-lg p-4 w-[300px]">
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <CheckCircle className="text-green-500 size-16" />
+            <h2 className="text-xl font-bold">¡Reserva Confirmada!</h2>
+            <p className="font-semibold flex items-center gap-2">
+              <MapPinned className="size-4" />
+              {
+                courts.find((court) => court.id === appointmnetData.CourtId)
+                  ?.name
+              }
+            </p>
+            <p className="font-semibold">
+              <FromatedDate date={appointmnetData.date} />
+            </p>
+            <p className="font-semibold">Hora: {appointmnetData.time}</p>
+
+            <p className="font-semibold"> ${27000 * 2}</p>
+          </div>
+        </div>
+        <Button
+          onClick={() => {
+            setAppointmnetData({
+              date: "",
+              duration: 90,
+              price: 0,
+              name: "",
+              CourtId: "",
+              TeamId: user?.TeamId || "",
+              time: "",
+            });
+            setIsConfirmed(false);
+          }}
+          className="bg-gradient-to-r from-gray-700 to-gray-500"
+        >
+          Volver
+        </Button>
+      </div>
+    );
   return (
     <div className="size-full flex flex-col gap-4 ">
       <section className="flex flex-col gap-4 items-center justify-center">
@@ -158,7 +194,7 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
                 disabled={!value.available}
                 className={` ${
                   appointmnetData.time === value.hs
-                    ? "bg-green-600 text-white font-semibold hover:bg-"
+                    ? "bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold hover:bg-"
                     : ""
                 } w-full h-16  p-4 text-center `}
                 key={value.hs}
@@ -174,6 +210,7 @@ export const CourtsMap = ({ courts }: CourtsMapProps) => {
         onClick={handleSubmit}
         disabled={!CreateAppointmentSchema.safeParse(appointmnetData).success}
         isLoading={saving}
+        className="bg-gradient-to-r from-gray-700 to-gray-500"
       >
         Reservar
       </Button>

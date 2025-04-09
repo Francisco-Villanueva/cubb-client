@@ -1,6 +1,5 @@
 import { AppointmentDetails } from "@/components/common/appointmnet-details";
 import { TeamShield } from "@/components/common/team-shield";
-import { Card } from "@/components/ui/card";
 import { ITeam } from "@/models/team.model";
 import { useAppSelector } from "@/store/hooks";
 interface TeamCardProps {
@@ -35,14 +34,8 @@ export function TeamCard({
       </div>
 
       {showNextMatch && (
-        <div className="flex-grow h-full">
-          {!nextAppointment ? (
-            <Card className="  rounded-none  text-sm flex justify-center items-center size-full">
-              <p className="font-semibold text-gray-800 ">
-                No tenés agendado ningun turno
-              </p>
-            </Card>
-          ) : (
+        <div className="flex-grow h-full w-full">
+          {!nextAppointment ? null : (
             <div className=" flex-grow rounded-none w-full">
               <p className="font-semibold text-gray-800 text-center ">
                 Próximo partido

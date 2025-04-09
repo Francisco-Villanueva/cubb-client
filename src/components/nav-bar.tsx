@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, PanelsLeftBottom } from "lucide-react";
+import { Calendar, LogOut, PanelsLeftBottom } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setUser } from "@/store/slices/user.slice";
 import { ROLES } from "@/interfaces/roles";
@@ -30,7 +30,13 @@ export function NavBar() {
 
       {user && user.role === ROLES.TEAM_ADMIN && (
         <section className="text-gray-50 flex items-center gap-8">
-          <Link to={"/turnos"}>Sacar turno</Link>
+          <Link
+            to={"/turnos"}
+            className="px-4 py-2 rounded-2xl font-medium flex items-center gap-2 bg-gradient-to-r from-gray-700 to-gray-500 hover:px-5"
+          >
+            <Calendar className="size-4" />
+            Sacar turno
+          </Link>
         </section>
       )}
       {user && user.role === ROLES.ADMIN && (
